@@ -5,7 +5,7 @@ class Cell {
         this.pos = _pos;
 
         this.destiny = random([0, 1]);
-        this.color = (this.destiny != 0) ? color(random(150, 255), random(100), 0, 120) : color(random(100), random(150, 255), 0, 120);
+        this.color = (this.destiny != 0) ? color(random(PI*0.25), random(70,100), 100, 40) : color(random(PI*0.5, PI*0.75), random(70,100), 100, 40);
     }
 
     move() {

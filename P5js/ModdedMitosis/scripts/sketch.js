@@ -9,7 +9,9 @@ let lavaColor;
 function setup() {
     createCanvas(windowWidth, windowHeight);
 
-    lavaColor = color(50, 50, 50);
+    colorMode(HSB, TWO_PI, 100, 100, 100);
+
+    lavaColor = color(0, 0, 50);
     field = createNoiseMap(width, height);
 
     cells.push(new Cell);
@@ -69,6 +71,9 @@ function keyPressed() {
         case 'r':
             loop();
             break;
+        case 'm':
+            noiseSeed();
+            break;
         default:
             break;
     }
@@ -82,8 +87,9 @@ function createNoiseMap(_w, _h) {
 
     for (let x = 0; x < width; x++) {
         for (let y = 0; y < height; y++) {
-            if (noise(x * 0.01, y * 0.01) > 0.4) {
-                mapImg.set(x, y, color(50, 100, 200));
+            let noiseVal = noise(x * 0.01, y * 0.01);
+            if (noiseVal > 0.4) {
+                mapImg.set(x, y, color(PI*1.15, 80, map(noiseVal, 0, 1, 140, 40)));
             } else {
                 mapImg.set(x, y, lavaColor);
             }
@@ -104,8 +110,7 @@ function spontaneouslySeed() {
 }
 
 function isLava(_locX, _locY, _image) {
-    let currentColor = color(_image.get(_locX, _locY));
-    if (currentColor.toString() === lavaColor.toString()) {
+    if (_image.get(_locX, _locY).toString() === lavaColor.levels.toString()) {
         return true;
     } else {
         return false;
