@@ -8,6 +8,7 @@ let medianHue;
 
 var currentFrameRate;
 
+let printPose = true;
 
 function setup() {
   createCanvas(640, 480);
@@ -26,20 +27,28 @@ function draw() {
   // currentFrameRate = frameRate();
   // if (currentFrameRate < 25) console.log(currentFrameRate);
 
-  image(video, 0, 0);
+  //image(video, 0, 0);
+  background(255);
 
   if (poses.length > 0) {
-    poses.forEach(function(poseObj, colorIndex){
-      drawPose(poseObj, colorIndex);
-    });
+    // poses.forEach(function(poseObj, colorIndex){
+    //   drawPose(poseObj, colorIndex);
+    // });
+
+    drawBody(poses[0], 0)
+    drawPose(poses[0], 0);
   }
 
 }
 
 function drawPose(poseObj, colorIndex) {
-  console.log(colorIndex);
   let pose = poseObj.pose;
   let skeleton = poseObj.skeleton;
+  if(printPose && skeleton.length > 0){
+    console.log(poseObj);
+    printPose = false;
+  }
+  
 
   for (let i = 0; i < pose.keypoints.length; i++) {
     let x = pose.keypoints[i].position.x;
@@ -56,6 +65,29 @@ function drawPose(poseObj, colorIndex) {
     stroke(poseColors[colorIndex][i]);
     line(a.position.x, a.position.y, b.position.x, b.position.y);
   }
+}
+
+// only one of the options
+
+function drawBody(poseObj, colorIndex){
+  let head = {'nose': poseObj.pose.nose,
+              'leftEye': poseObj.pose.leftEye,
+              'rightEye': poseObj.pose.rightEye}
+  
+  let centroidX = (head.nose.x + head.leftEye.x + head.rightEye.x)/3;
+  let centroidY = (head.nose.y + head.leftEye.y + head.rightEye.y)/3;
+  let diam = dist(centroidX, centroidY, head.leftEye.x, head.leftEye.y) * 4;
+  
+  fill(0);
+  ellipse(centroidX, centroidY, diam, diam);
+
+  beginShape();
+  vertex(poseObj.pose.leftShoulder.x, poseObj.pose.leftShoulder.y);
+  vertex(poseObj.pose.rightShoulder.x, poseObj.pose.rightShoulder.y);
+  vertex(poseObj.pose.rightHip.x, poseObj.pose.rightHip.y);
+  vertex(poseObj.pose.leftHip.x, poseObj.pose.leftHip.y);
+  endShape();
+
 }
 
 function detectClap(pose){
