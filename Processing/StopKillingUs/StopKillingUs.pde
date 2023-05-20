@@ -1,13 +1,15 @@
 //String text1 = "THE TIME\nIS\nNOW";
 //String text2 = "HEAR\nTHE\nUNHEARD";
-String text1 = "STOP\nKILLING\nUS";
+String text1 = "WHO YOU\nGONNA\nCALL";
+String text2 = "WHEN\nTHE COPS\nARE\nTHE KILLERS";
+//String text1 = "STOP\nKILLING\nUS";
 //String text2 = "WHO\nWILL BE\nNEXT";
-String text2 = "BLACK\nLIVES\nMATTER";
+//String text2 = "BLACK\nLIVES\nMATTER";
 
 PGraphics text1Layer, text2Layer;
 
-int fontSize = 180;
-int leading = 180;
+int fontSize = 140;
+int leading = 140;
 
 color textLayerColor = color(255);
 color bloodColor = color(240);
@@ -23,8 +25,8 @@ float easingSlope = 0.03;
 PFont font;
 
 void setup() {
-  //size(800, 800, P3D);
-  fullScreen();
+  size(800, 800, P3D);
+  //fullScreen();
   font = loadFont("Text-80.vlw");
   
   text1Layer = createGraphics(width, height);
