@@ -1,17 +1,24 @@
 let cells = [];
 
-let thresholdDiam = 20;
-let deathCoeff = thresholdDiam * 0.3;
-let field;
+const thresholdDiam = 10
+const deathCoeff = thresholdDiam * 2.5
+const overcrowdingThreshold = 0.07
+const seedThreshold = 0.5
 
+let field;
 let lavaColor;
+
+//TODO: make the cells prefer the company of their own kind
+// i.e. higher chance of death around others
+
+//TODO: add GUI
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
 
     colorMode(HSB, TWO_PI, 100, 100, 100);
 
-    lavaColor = color(0, 0, 50);
+    lavaColor = color(0, 70, 50);
     field = createNoiseMap(width, height);
 
     cells.push(new Cell);
@@ -26,18 +33,21 @@ function draw() {
 
     cells.forEach((element, index) => {
         element.grow();
+
         if (element.diam > thresholdDiam) {
             cells.push(element.mitosis());
         }
 
         element.move();
 
-        // die of malnutrition/lava
-        if (element.diam < thresholdDiam / deathCoeff || isLava(element.pos.x, element.pos.y, field)) {
+        // die of old age/malnutricion/lava
+        if ( element.mitosisCounter > 10 || element.diam > deathCoeff || isLava(element.pos.x, element.pos.y, field)) {
             cells.splice(index, 1);
         }
+
         //check for neighbours
         for (let j = index + 1; j < cells.length; j++) {
+            
             if(element.overlap(cells[j].pos, cells[j].diam) && neighbours.indexOf(index) < 0 ){
                 neighbours.push(index);
                 neighbours.push(j);
@@ -49,13 +59,13 @@ function draw() {
 
     //die of overcrowding
     neighbours.forEach((element) => {
-        if(random() < 0.03){
+        if(random() < overcrowdingThreshold){
             cells.splice(element, 1);
         }
     })
 
     if (cells.length < 4 || random() < 0.1) {
-        spontaneouslySeed();
+        spontaneouslySeed(seedThreshold);
     }
 
 
@@ -103,8 +113,8 @@ function createNoiseMap(_w, _h) {
 
 }
 
-function spontaneouslySeed() {
-    if (random() > 0.6) {
+function spontaneouslySeed(_threshold) {
+    if (random() > _threshold) {
         cells.push(new Cell);
     }
 }

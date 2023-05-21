@@ -1,15 +1,17 @@
 class Cell {
     constructor(_diam = random(thresholdDiam / 5, thresholdDiam / 2), _pos = createVector(random(width), random(height))) {
-        this.diam = _diam;
-        this.noisePos = 0;
-        this.pos = _pos;
+        this.diam = _diam
+        this.noisePos = 0
+        this.pos = _pos
+        this.mitosisCounter = 0
 
-        this.destiny = random([0, 1]);
-        this.color = (this.destiny != 0) ? color(random(PI*0.25), random(70,100), 100, 40) : color(random(PI*0.5, PI*0.75), random(70,100), 100, 40);
+        this.destiny = random([0, 1])
+        this.color = (this.destiny != 0) ? color(random(PI*0.25), random(70,100), 100, 80) : color(random(PI*0.5, PI*0.75), random(70,100), 100, 80)
     }
 
     move() {
         this.pos.add(p5.Vector.random2D().mult(this.diam * 0.3));
+
         this.pos.x = constrain(this.pos.x, this.diam, width - this.diam);
         this.pos.y = constrain(this.pos.y, this.diam, height - this.diam);
     }
@@ -21,9 +23,10 @@ class Cell {
     }
 
     mitosis() {
-        let newDiam = sqrt(this.diam);
-        this.diam = newDiam;
-        return new Cell(newDiam, this.pos.copy());
+        let newDiam = sqrt(this.diam)
+        this.diam = newDiam
+        this.mitosisCounter++
+        return new Cell(newDiam, this.pos.copy())
     }
 
     overlap(_pos, _diam) {
