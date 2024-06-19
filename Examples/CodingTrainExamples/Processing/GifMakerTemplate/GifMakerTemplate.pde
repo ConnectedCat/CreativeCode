@@ -6,6 +6,12 @@ void setup(){
   size(400, 400);
 }
 
+void keyPressed(){
+  if(key == TAB){
+    record = true;
+  }
+}
+
 void draw(){
   float percent = 0;
   if(record){
@@ -39,10 +45,4 @@ void render(float _percent){
   stroke(255);
   strokeWeight(3);
   square(0, 0, 200);
-}
-
-void keyPressed(){
-  if(key == TAB){
-    record = true;
-  }
 }
