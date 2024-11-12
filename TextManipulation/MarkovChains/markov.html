@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markov Chains</title>
+</head>
+<body>
+
+    <button onclick="fetchAndProcessText()">Fetch Text</button>
+    
+    <input type="radio" id="ngrams" name="choice" value="1" checked />
+    <label for="ngrams">NGrams</label>
+    <input type="radio" id="words" name="choice" value="0"/>
+    <label for="words">Words</label>
+    <br>
+    <div id="step2" style="display: none;">
+        <input id="prompt" type="text">
+        <button onclick="generateText()">Generate Text</button>
+        <p id="output"></p>
+    </div>
+<script>
+// Controls
+let order = 3;
+let ngramsOverWords = document.getElementById("ngrams").checked;
+let ngrams = {};
+let beginnings = [];
+
+const step2 = document.getElementById('step2');
+const prompt = document.getElementById('prompt');
+const output = document.getElementById('output');
+
+function fetchAndProcessText(){
+    fetch('https://poetrydb.org/author/John%20Keats')
+    .then(response => response.json())
+    .then(poems => {
+        poems.forEach(poem => {
+            poem.lines.forEach(line => {
+                line = line.toLowerCase().replace(/["'`,!?;.:]/g, '');
+                if(!line){
+                    return;
+                }
+                //console.log(line);
+                if(ngramsOverWords){
+                    for(let i = 0; i <= line.length - order; i++){
+                        let gram = line.substring(i, i + order);
+                        if(!ngrams[gram]){
+                            ngrams[gram] = [];
+                        }
+                        ngrams[gram].push(line.charAt(i + order));
+                    }
+
+                }
+                else{
+                    let words = line.split(' ');
+                    for(let i = 0; i < words.length - 1; i++){
+                        let word = words[i].replace(/["'`]/g, '');
+                        if(i == 0){
+                            beginnings.push(word);
+                        }
+                        let next = words[i + 1];
+                        if(!ngrams[word]){
+                            ngrams[word] = [];
+                        }
+                        ngrams[word].push(next);
+                    }
+                }
+            })                
+        });
+        step2.style.display = 'block';
+        console.log(ngrams);
+    });
+}
+
+function generateText(){
+    if(ngramsOverWords){
+        generateTextNGrams();
+    }
+    else{
+        generateTextWords();
+    }
+}
+function generateTextNGrams(){
+    let currentGram = prompt.value.substring(0, order);
+    let result = currentGram;
+    for(let i = 0; i < 50; i++){
+        let possibilities = ngrams[currentGram];
+        if(!possibilities){
+            break;
+        }
+        let next = possibilities[Math.floor(Math.random() * possibilities.length)];
+        result += next;
+        currentGram = result.substring(result.length - order, result.length);
+    }
+    output.innerHTML += '<br>' + result;
+}
+function generateTextWords(){
+    let currentWord = beginnings[Math.floor(Math.random() * beginnings.length)];
+    let result = currentWord;
+    for(let i = 0; i < 10; i++){
+        let possibilities = ngrams[currentWord];
+        if(!possibilities){
+            break;
+        }
+        let next = possibilities[Math.floor(Math.random() * possibilities.length)];
+        result += ' ' + next;
+        currentWord = next;
+    }
+    output.innerHTML += '<br>' + result;
+}
+</script>
+</body>
+</html>
