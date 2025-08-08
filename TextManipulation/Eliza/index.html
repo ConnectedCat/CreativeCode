@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliza</title>
+    <style>
+        body {
+            margin: 0;
+        }
+        main {
+            padding: 20px;
+        }
+        .identifier{
+            font-weight: bold;
+        }
+        footer {
+            height: 30px;
+            border-top: 1px solid black;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            padding: 20px;
+        }
+        footer input{
+            width: 80%;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <p class="identifier">Eliza:</p>
+        <p>Hello. How are you feeling today?</p>
+        <p class="identifier">You:</p>
+    </main>
+    <footer>
+        <input type="text" id="request">
+        <button onclick="getResponse()">Submit</button>
+    </footer>
+    <script>
+        function getResponse(){
+            let request = document.getElementById('request').value;
+            console.log(request);
+        }
+    </script>
+</body>
+</html>
