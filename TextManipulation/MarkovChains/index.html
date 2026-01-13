@@ -31,6 +31,11 @@ const prompt = document.getElementById('prompt');
 const output = document.getElementById('output');
 
 function fetchAndProcessText(){
+    // fetch("myfile.txt")
+    // .then(r=>r.text())
+    // .then(text => {
+    //     lines = text.split("\n")
+    // })
     fetch('https://poetrydb.org/author/John%20Keats')
     .then(response => response.json())
     .then(poems => {
